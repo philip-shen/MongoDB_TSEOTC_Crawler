@@ -29,22 +29,18 @@ $ sudo service mongod restart
 ``` 
 
 * Step 3
-Swtich to DB and Create Read/Write Privilege for User
+Swtich to Admin and Create Read/Write Privilege for User
 ``` 
-> use TWStockDB
-``` 
-
-``` 
-> db.getUsers()
+> ~$ mongo --port 27017 -u "admin" -p "adminpassword" --authenticationDatabase "admin"
 ``` 
 
 ``` 
-> db.createUser(......)
+> db.grantRolesToUser( "philshen", [ "dbAdmin" , { role: "dbAdmin", db: "TWStockDB" } ] );
 
-> db.getUsers()
+> db.grantRolesToUser( "philshen", [ "readWrite" , { role: "readWrite", db: "TWStockDB" } ] );
 ``` 
 
-![alt tag](https://i.imgur.com/Mx4Y4Fv.jpg)
+![alt tag](https://i.imgur.com/XU4VQ8n.jpg)
 
 
 * Step 4
