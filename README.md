@@ -64,7 +64,11 @@ $ sudo service mongod restart
 * Step 5
 Testing to connect MongoDB via Robo 3T
 
-![alt tag](https://i.imgur.com/r7aYl0x.jpg)
+![alt tag](https://i.imgur.com/Gu00xWM.jpg)
+
+Check DB and browse document and collections
+
+![alt tag](https://i.imgur.com/m2VXbHx.jpg)
 
 TroubleShooting
 ==============================
@@ -109,6 +113,7 @@ o Python 3.6。
 
 Reference 
 ==============================
+* [Setting up and connecting to a remote MongoDB database](https://medium.com/founding-ithaka/setting-up-and-connecting-to-a-remote-mongodb-database-5df754a4da89)
 * [[mongodb]增加mongoDB效能的技巧](https://blog.xuite.net/flyingidea/blog/67641474)
 * [[mongoDB]index功能的筆記](https://blog.xuite.net/flyingidea/blog/68050501)
 * [[Python] Pandas dataframe 資料儲存至 MongoDB](https://oranwind.org/python-pandas-ji-chu-jiao-xue-2/)
@@ -135,6 +140,11 @@ Do not access this collection directly but instead use the user management comma
 
 * [MongoError: not authorized on to execute command { find: “app_updates”, filter: { key: “0.0.1-admins” }, limit: 1, batchSize: 1, singleBatch: true }](https://stackoverflow.com/questions/47130379/mongoerror-not-authorized-on-to-execute-command-find-app-updates-filter)
 * [Mongodb enable authentication (Enable Access Control)](https://medium.com/@raj_adroit/mongodb-enable-authentication-enable-access-control-e8a75a26d332)
+
+* [Tutorial Bulk Inserts](http://api.mongodb.com/python/current/tutorial.html#bulk-inserts)
+* [MongoDB pymongo bulk update all documents in a collection](https://gist.github.com/messa/4407772e87c61e193b3bf2a777a6e0e0)
+
+* [jang0820/Stock/FromTwseToMongo.py](https://github.com/jang0820/Stock/blob/master/FromTwseToMongo.py)
 
 * []()
 ![alt tag]()

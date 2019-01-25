@@ -48,9 +48,11 @@ def get_stock_history(date, stock_no, retry = 5):   #從www.twse.com.tw讀取資
     url = 'http://www.twse.com.tw/exchangeReport/STOCK_DAY?date=%s&stockNo=%s' % ( date, stock_no)
     r = requests.get(url)
     data = r.json()
-    print(data)
+    #print(data)
 
-    return transform(data['data'])  #進行資料格式轉換
+    transformdata = transform(data['data'])  #進行資料格式轉換
+    #print(transformdata)
+    return transformdata
 
 def transform_date(date):   #民國轉西元
         y, m, d = date.split('/')
@@ -78,8 +80,11 @@ def genYM(smonth, syear, emonth, eyear):  #產生從syear年smonth月到eyear年
         y, m = divmod(num, 12)
         yield y, m
 
-def fetch_data(year: int, month: int, stockno):  #擷取從year-month開始到目前為止的所有交易日資料
+def fetch_data(year: int, month: int, stockno,delay_sec):  #擷取從year-month開始到目前為止的所有交易日資料
     count_element = 0
+    data = []
+    list_element = []
+    
 
     today = datetime.datetime.today()
     for year, month in genYM(month, year, today.month, today.year): #產生year-month到今天的年與月份，用於查詢證交所股票資料
@@ -87,18 +92,48 @@ def fetch_data(year: int, month: int, stockno):  #擷取從year-month開始到�
             date = str(year) + '0' + str(month) + '01'  #1到9月
         else:
             date = str(year) + str(month) + '01'   #10月
-        data = get_stock_history(date, stockno)
-        for item in data:  #取出每一天編號為stockno的股票資料
-            if collection.find({ "date": item[0],   #找尋該交易資料是否不存在
-                    "stockno": stockno} ).count() == 0:
-                    
-                element={'date':item[0], 'stockno':stockno, 'shares':item[1], 'amount':item[2], 'open':item[3], 'high':item[4], 
-                     'low':item[5], 'close':item[6], 'diff':item[7], 'turnover':item[8]};  #製作MongoDB的插入元素
-                print(element)
-                collection.insert_one(element)  #插入元素到MongoDB
-                count_element += 1   #caluate element numbers
 
-        time.sleep(5)  #延遲5秒，證交所會根據IP進行流量統計，流量過大會斷線
+        max_error = 5
+        error_times = 0
+        while error_times < max_error:
+            try:
+                data = get_stock_history(date, stockno)
+                for item in data:  #取出每一天編號為stockno的股票資料
+                    if collection.find({ "date": item[0],   #找尋該交易資料是否不存在
+                            "stockno": stockno} ).count() == 0:
+
+                        dic_element={'date':item[0], 'stockno':stockno, 'shares':item[1], 
+                                    'amount':item[2], 'open':item[3], 'high':item[4], 
+                                    'low':item[5], 'close':item[6], 'diff':item[7], 'turnover':item[8]};  #製作MongoDB的插入元素    
+                        list_element.append(dic_element)#append all dic_element for bluck insert
+
+                    count_element += 1   #caluate element numbers
+
+                time.sleep(delay_sec)  #延遲delay_sec秒，證交所會根據IP進行流量統計，流量過大會斷線
+                error_times = 0
+                
+            except:
+                error_times += 1
+                msg = 'Wait {} time(s).'
+                logger.info(msg.format(error_times))
+                continue    
+        
+        #for item in data:  #取出每一天編號為stockno的股票資料
+        #    if collection.find({ "date": item[0],   #找尋該交易資料是否不存在
+        #            "stockno": stockno} ).count() == 0:
+                    
+        #        dic_element={'date':item[0], 'stockno':stockno, 'shares':item[1], 'amount':item[2], 'open':item[3], 'high':item[4], 
+        #             'low':item[5], 'close':item[6], 'diff':item[7], 'turnover':item[8]};  #製作MongoDB的插入元素
+                
+        #        list_element.append(dic_element)#append all dic_element for bluck insert
+
+                #print(element)
+                #collection.insert_one(element)  #插入元素到MongoDB
+        #        count_element += 1   #caluate element numbers
+
+        #time.sleep(delay_sec)  #延遲5秒，證交所會根據IP進行流量統計，流量過大會斷線
+
+    collection.insert_many(list_element)#bluck insert all documents
 
     return count_element   
 
@@ -119,9 +154,13 @@ if __name__ == '__main__':
     str_stkidx =  localReadConfig.get_SeymourExcel("stkidx")
     str_last_year = str_last_year_month.split(',')[0]
     str_last_month = str_last_year_month.split(',')[1]
+    str_delay_sec = localReadConfig.get_SeymourExcel("delay_sec")
 
     connect_mongo(mongo_host,mongo_db,mongo_collection,mongo_username,mongo_password)   #連線資料庫
-    count = fetch_data(int(str_last_year), int(str_last_month), str_stkidx)   #取出編號stkidx的股票，從str_last_year_month到今天的股價與成交量資料
+    # only for testing - of course do not do drop() in production
+    collection.drop()
+
+    count = fetch_data(int(str_last_year), int(str_last_month), str_stkidx, int(str_delay_sec))   #取出編號stkidx的股票，從str_last_year_month到今天的股價與成交量資料
 
     msg = '{} collection(s) downloaded in {:.2f} seconds.'
     logger.info(msg.format(count, time.time() - t0))
