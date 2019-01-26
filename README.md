@@ -2,6 +2,11 @@ MongoDB_TSEOTC_Crawler
 ==============================
 TW TSE&amp;OTC OHLC Price Crawler to store in MongoDB
 
+Sequence Diagram
+==============================
+![alt tag](https://i.imgur.com/0HBUWEK.jpg)
+(Diagram made with [js-sequence-diagrams](https://bramp.github.io/js-sequence-diagrams/))
+
 MongoDB Setup:
 ==============================
 * Step 1
@@ -109,6 +114,7 @@ o Ubuntu 16.04.5 LTS (GNU/Linux 4.15.0-1026-gcp x86_64)。
 o MongoDB 3.6。
 o Robo 3T 1.2.1。
 o Python 3.6。
+o pymongo 3.7.2。
 ``` 
 
 Reference 
