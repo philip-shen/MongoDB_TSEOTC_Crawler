@@ -25,23 +25,9 @@ if not os.path.isdir(dirnamelog):
 sys.path.append(dirnamelib)
 import readConfig as readConfig
 from logger import logger
+import connectMongoDB
 
-def connect_mongo(arg, *args):  #連線資料庫
-    global collection
-    mongo_host=arg
-    mongo_db=args[0]
-    mongo_collection=args[1]
-    #print(arg,args[0],args[1])
-    mongo_username=args[2]
-    mongo_password=args[3]
-
-    uri_mongo = "mongodb://{}:{}@{}:27017" 
-
-    client = MongoClient(uri_mongo.format(mongo_username,mongo_password,mongo_host))
-    db = client[mongo_db]
-    collection = db[mongo_collection]
-    print(collection)
-
+global collection
 
 def get_stock_history(date, stock_no):   #從www.twse.com.tw讀取資料
     quotes = []
@@ -153,7 +139,8 @@ if __name__ == '__main__':
     str_stkidx =  localReadConfig.get_SeymourExcel("stkidx")
     str_delay_sec = localReadConfig.get_SeymourExcel("delay_sec")
 
-    connect_mongo(mongo_host,mongo_db,mongo_collection,mongo_username,mongo_password)   #連線資料庫
+    collection = connectMongoDB.MongoDBConnection.connect_mongo(mongo_host,mongo_db,
+                    mongo_collection,mongo_username,mongo_password)   #連線資料庫
     # only for testing - of course do not do drop() in production
     #collection.drop()
 
