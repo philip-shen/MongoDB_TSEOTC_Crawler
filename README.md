@@ -2,10 +2,44 @@ MongoDB_TSEOTC_Crawler
 ==============================
 TW TSE&amp;OTC OHLC Price Crawler to store in MongoDB
 
+
 Sequence Diagram
 ==============================
 ![alt tag](https://i.imgur.com/0HBUWEK.jpg)
 (Diagram made with [js-sequence-diagrams](https://bramp.github.io/js-sequence-diagrams/))
+
+
+MongoDB Bulk Insertion Test:
+==============================
+* Step 1
+Edit file config.ini to meet your setting
+``` 
+[MONGODB]
+;modify below those variables to meet your configuration
+mongo_host = mongo_ip
+mongo_db = TWStockDB
+mongo_collection = TSEOTC
+mongo_username = username
+mongo_password = password
+
+[SeymourExcel]
+last_year_month=2018,10
+stkidx = 2892
+delay_sec = 1
+``` 
+
+* Step 2
+![alt tag](https://i.imgur.com/emeTmtP.jpg)
+
+* Step 3
+Testing to connect MongoDB via Robo 3T
+
+![alt tag](https://i.imgur.com/Gu00xWM.jpg)
+
+Check DB and browse document and collections
+
+![alt tag](https://i.imgur.com/m2VXbHx.jpg)
+
 
 MongoDB Setup:
 ==============================
@@ -66,14 +100,6 @@ Now save and exit the config file and restart mongodb server.
 $ sudo service mongod restart
 ``` 
 
-* Step 5
-Testing to connect MongoDB via Robo 3T
-
-![alt tag](https://i.imgur.com/Gu00xWM.jpg)
-
-Check DB and browse document and collections
-
-![alt tag](https://i.imgur.com/m2VXbHx.jpg)
 
 TroubleShooting
 ==============================
@@ -149,6 +175,15 @@ Do not access this collection directly but instead use the user management comma
 
 * [Tutorial Bulk Inserts](http://api.mongodb.com/python/current/tutorial.html#bulk-inserts)
 * [MongoDB pymongo bulk update all documents in a collection](https://gist.github.com/messa/4407772e87c61e193b3bf2a777a6e0e0)
+
+* [MongoDB Schema 設計指南](http://blog.toright.com/posts/4537/mongodb-schema-%E8%A8%AD%E8%A8%88%E6%8C%87%E5%8D%97-part-ii-%E5%8F%8D%E6%AD%A3%E8%A6%8F%E5%8C%96%E7%9A%84%E5%A8%81%E5%8A%9B.html)
+* [MongoDB Schema 設計指南 (Part II) – 反正規化的威力](http://blog.toright.com/posts/4537/mongodb-schema-%E8%A8%AD%E8%A8%88%E6%8C%87%E5%8D%97-part-ii-%E5%8F%8D%E6%AD%A3%E8%A6%8F%E5%8C%96%E7%9A%84%E5%A8%81%E5%8A%9B.html)
+* [MongoDB 教學 – 如何備份與還原 MongoDB](http://blog.toright.com/posts/4069/mongodb-%E6%95%99%E5%AD%B8-%E5%A6%82%E4%BD%95%E5%82%99%E4%BB%BD%E8%88%87%E9%82%84%E5%8E%9F-mongodb.html)
+* [MongoDB Replica Set 高可用性架構搭建](http://blog.toright.com/posts/4508/mongodb-replica-set-%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E6%9E%B6%E6%A7%8B%E6%90%AD%E5%BB%BA.html)
+* [MongoDB Sharding 分散式儲存架構建置 (概念篇)](http://blog.toright.com/posts/4552/mongodb-sharding-%E5%88%86%E6%95%A3%E5%BC%8F%E5%84%B2%E5%AD%98%E6%9E%B6%E6%A7%8B%E5%BB%BA%E7%BD%AE-%E6%A6%82%E5%BF%B5%E7%AF%87.html)
+* [MongoDB Sharding 分散式儲存架構建置 (實作篇)](http://blog.toright.com/posts/4574/mongodb-sharding-%E5%88%86%E6%95%A3%E5%BC%8F%E5%84%B2%E5%AD%98%E6%9E%B6%E6%A7%8B%E5%BB%BA%E7%BD%AE-%E5%AF%A6%E4%BD%9C%E7%AF%87.html)
+
+* [Replication](https://docs.mongodb.com/v3.6/replication/)
 
 * [jang0820/Stock/FromTwseToMongo.py](https://github.com/jang0820/Stock/blob/master/FromTwseToMongo.py)
 
